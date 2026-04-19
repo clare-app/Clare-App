@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clare — Private Calendar for High-Value Executives</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0B1C3A;
+  --navy-mid: #142952;
+  --navy-light: #1A3A6B;
+  --gold: #C8A96E;
+  --gold-light: #E2C98A;
+  --slate: #131C29;
+  --white: #F5F3EE;
+  --muted: #8FABC4;
+  --stone: #E8E5DE;
+  --cream: #F5F4F0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--slate);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(11,28,58,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid rgba(200,169,110,0.15);
+  padding: 0 40px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold); letter-spacing: 0.2em; font-weight: 400; }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-link { font-size: 12px; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.nav-link:hover { color: var(--gold); }
+.nav-lang { display: flex; gap: 4px; }
+.lang-btn { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid rgba(200,169,110,0.2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+.lang-btn.active { background: rgba(200,169,110,0.1); border-color: var(--gold); color: var(--gold); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 100px 40px 60px;
+  position: relative;
+  background: var(--navy);
+}
+.hero-pattern {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+}
+.hero-pattern::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(45deg, rgba(26,58,107,0.3) 0, rgba(26,58,107,0.3) 1px, transparent 0, transparent 50%);
+  background-size: 40px 40px;
+}
+.hero-line { width: 1px; height: 80px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); margin: 0 auto 40px; }
+.hero-tag { font-size: 11px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 24px; opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards; }
+.hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 8vw, 96px); font-weight: 300; color: var(--white); line-height: 1.0; margin-bottom: 8px; letter-spacing: 0.15em; opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards; }
+.hero-subtitle { font-family: 'Cormorant Garamond', serif; font-size: clamp(14px, 2vw, 20px); color: var(--gold); letter-spacing: 0.12em; margin-bottom: 32px; font-weight: 300; opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards; }
+.hero-desc { font-size: clamp(14px, 1.5vw, 17px); color: var(--muted); max-width: 560px; line-height: 1.8; margin: 0 auto 48px; opacity: 0; animation: fadeUp 0.8s ease 0.8s forwards; }
+.hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s ease 1s forwards; }
+.btn-primary { background: var(--gold); color: var(--navy); border: none; border-radius: 0; padding: 14px 36px; font-size: 12px; letter-spacing: 0.12em; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.2s; font-weight: 500; text-decoration: none; display: inline-block; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-secondary { background: transparent; color: var(--gold); border: 0.5px solid rgba(200,169,110,0.4); border-radius: 0; padding: 14px 36px; font-size: 12px; letter-spacing: 0.12em; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+.btn-secondary:hover { border-color: var(--gold); background: rgba(200,169,110,0.05); }
+.hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); font-size: 10px; letter-spacing: 0.15em; color: rgba(143,171,196,0.4); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); }
+
+/* FEATURES */
+.features {
+  background: var(--slate);
+  padding: 100px 40px;
+}
+.section-label { font-size: 10px; letter-spacing: 0.2em; color: var(--gold); text-align: center; margin-bottom: 16px; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 56px); font-weight: 300; text-align: center; color: var(--white); margin-bottom: 16px; letter-spacing: 0.05em; }
+.section-sub { font-size: 15px; color: var(--muted); text-align: center; max-width: 480px; margin: 0 auto 64px; line-height: 1.7; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; max-width: 1100px; margin: 0 auto; background: rgba(200,169,110,0.1); }
+.feature-card { background: var(--slate); padding: 40px 36px; transition: background 0.3s; }
+.feature-card:hover { background: #1A2535; }
+.feature-icon { width: 40px; height: 40px; margin-bottom: 20px; }
+.feature-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--white); margin-bottom: 10px; font-weight: 400; }
+.feature-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.feature-tag { display: inline-block; font-size: 10px; padding: 3px 10px; border: 0.5px solid rgba(200,169,110,0.3); color: var(--gold); letter-spacing: 0.08em; margin-top: 16px; }
+
+/* FOR WHOM */
+.for-whom { background: var(--navy); padding: 100px 40px; }
+.whom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; max-width: 900px; margin: 0 auto; background: rgba(200,169,110,0.1); }
+.whom-card { background: var(--navy); padding: 48px 40px; }
+.whom-card:hover { background: var(--navy-mid); }
+.whom-label { font-size: 10px; letter-spacing: 0.18em; color: var(--gold); margin-bottom: 16px; }
+.whom-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--white); margin-bottom: 14px; font-weight: 300; }
+.whom-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.whom-list { list-style: none; margin-top: 16px; }
+.whom-list li { font-size: 13px; color: var(--muted); padding: 5px 0; padding-left: 16px; position: relative; }
+.whom-list li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+
+/* DEMO SECTION */
+.demo-section { background: var(--slate); padding: 80px 40px; }
+.demo-label { font-size: 10px; letter-spacing: 0.2em; color: var(--gold); text-align: center; margin-bottom: 16px; }
+.demo-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 52px); font-weight: 300; text-align: center; color: var(--white); margin-bottom: 16px; }
+.demo-sub { font-size: 15px; color: var(--muted); text-align: center; max-width: 480px; margin: 0 auto 48px; line-height: 1.7; }
+.demo-frame-wrapper { max-width: 1200px; margin: 0 auto; border: 0.5px solid rgba(200,169,110,0.2); border-radius: 8px; overflow: hidden; }
+.demo-bar { background: var(--navy); padding: 12px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid rgba(200,169,110,0.1); }
+.demo-dots { display: flex; gap: 6px; }
+.demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+.demo-url { flex: 1; background: rgba(255,255,255,0.04); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: var(--muted); letter-spacing: 0.04em; text-align: center; }
+.demo-iframe { width: 100%; height: 680px; border: none; display: block; }
+
+/* PRICING */
+.pricing { background: var(--navy); padding: 100px 40px; }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; max-width: 900px; margin: 0 auto; background: rgba(200,169,110,0.1); }
+.price-card { background: var(--navy); padding: 48px 36px; position: relative; }
+.price-card.featured { background: #0D2044; }
+.price-badge { position: absolute; top: -1px; left: 36px; background: var(--gold); color: var(--navy); font-size: 10px; letter-spacing: 0.1em; padding: 4px 14px; font-weight: 500; }
+.price-label { font-size: 10px; letter-spacing: 0.18em; color: var(--gold); margin-bottom: 12px; }
+.price-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--white); margin-bottom: 8px; font-weight: 300; }
+.price-amount { font-size: 42px; font-weight: 500; color: var(--white); margin: 20px 0 4px; }
+.price-amount span { font-size: 16px; font-weight: 300; color: var(--muted); }
+.price-period { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+.price-features { list-style: none; margin-bottom: 32px; }
+.price-features li { font-size: 13px; color: var(--muted); padding: 7px 0; padding-left: 18px; position: relative; border-bottom: 0.5px solid rgba(255,255,255,0.04); }
+.price-features li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-size: 11px; }
+
+/* CONTACT */
+.contact { background: var(--slate); padding: 100px 40px; text-align: center; }
+.contact-inner { max-width: 560px; margin: 0 auto; }
+.contact-form { display: flex; flex-direction: column; gap: 14px; margin-top: 40px; text-align: left; }
+.form-field label { font-size: 10px; letter-spacing: 0.14em; color: var(--gold); display: block; margin-bottom: 6px; }
+.form-field input, .form-field textarea, .form-field select {
+  width: 100%; background: rgba(255,255,255,0.04); border: 0.5px solid rgba(200,169,110,0.2);
+  border-radius: 0; padding: 12px 16px; font-size: 14px; color: var(--white);
+  font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
+}
+.form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--gold); }
+.form-field input::placeholder, .form-field textarea::placeholder { color: rgba(143,171,196,0.3); }
+.form-field select option { background: var(--navy-mid); }
+.form-field textarea { resize: vertical; min-height: 100px; }
+.form-submit { background: var(--gold); color: var(--navy); border: none; padding: 14px; font-size: 12px; letter-spacing: 0.14em; font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500; transition: opacity 0.2s; width: 100%; }
+.form-submit:hover { opacity: 0.85; }
+.form-success { display: none; text-align: center; padding: 32px; background: rgba(200,169,110,0.07); border: 0.5px solid rgba(200,169,110,0.2); }
+.form-success p { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 22px; margin-bottom: 8px; }
+.form-success small { color: var(--muted); font-size: 13px; }
+
+/* FOOTER */
+footer { background: var(--navy); border-top: 0.5px solid rgba(200,169,110,0.12); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; }
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold); letter-spacing: 0.18em; }
+.footer-note { font-size: 11px; color: rgba(143,171,196,0.3); letter-spacing: 0.08em; }
+.footer-privacy { font-size: 11px; color: rgba(200,169,110,0.35); }
+
+/* DIVIDER */
+.gold-divider { width: 40px; height: 1px; background: var(--gold); margin: 0 auto 32px; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* LANG TOGGLE */
+.es-text, .en-text { transition: opacity 0.3s; }
+body.lang-en .es-text { display: none; }
+body.lang-es .en-text { display: none; }
+body.lang-es .es-text { display: block; }
+body.lang-en .en-text { display: block; }
+span.es-text, span.en-text { display: inline; }
+body.lang-en span.es-text { display: none; }
+body.lang-es span.en-text { display: none; }
+
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { gap: 16px; }
+  .hero { padding: 100px 24px 60px; }
+  .features, .for-whom, .demo-section, .pricing, .contact { padding: 60px 24px; }
+  .whom-grid { grid-template-columns: 1fr; }
+  .demo-iframe { height: 480px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body class="lang-es">
+
+<nav>
+  <div class="nav-brand">CLARE</div>
+  <div class="nav-links">
+    <a href="#features" class="nav-link"><span class="es-text">Funciones</span><span class="en-text">Features</span></a>
+    <a href="#demo" class="nav-link"><span class="es-text">Demo</span><span class="en-text">Demo</span></a>
+    <a href="#pricing" class="nav-link"><span class="es-text">Precios</span><span class="en-text">Pricing</span></a>
+    <a href="#contact" class="nav-link"><span class="es-text">Contacto</span><span class="en-text">Contact</span></a>
+    <div class="nav-lang">
+      <button class="lang-btn active" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-line"></div>
+  <div class="hero-tag es-text">PRIVATE CALENDAR · EXECUTIVE SUITE</div>
+  <div class="hero-tag en-text">PRIVATE CALENDAR · EXECUTIVE SUITE</div>
+  <h1 class="hero-title">CLARE</h1>
+  <div class="hero-subtitle es-text">La agenda que los ejecutivos merecen</div>
+  <div class="hero-subtitle en-text">The calendar executives deserve</div>
+  <p class="hero-desc es-text">Una plataforma premium de gestión de agenda para ejecutivos de alto valor y sus asistentes. Inteligencia de negocio integrada. Privacidad absoluta. Experiencia de lujo.</p>
+  <p class="hero-desc en-text">A premium scheduling platform for high-value executives and their assistants. Integrated business intelligence. Absolute privacy. Luxury experience.</p>
+  <div class="hero-cta">
+    <a href="#demo" class="btn-primary es-text">VER LA DEMO</a>
+    <a href="#demo" class="btn-primary en-text">SEE THE DEMO</a>
+    <a href="#contact" class="btn-secondary es-text">SOLICITAR ACCESO</a>
+    <a href="#contact" class="btn-secondary en-text">REQUEST ACCESS</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="es-text">EXPLORAR</span>
+    <span class="en-text">EXPLORE</span>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="section-label reveal es-text">LO QUE HACE CLARE</div>
+  <div class="section-label reveal en-text">WHAT CLARE DOES</div>
+  <h2 class="section-title reveal es-text">No es una agenda más</h2>
+  <h2 class="section-title reveal en-text">Not just another calendar</h2>
+  <p class="section-sub reveal es-text">Clare conoce el negocio del ejecutivo, protege su tiempo y cuida cada detalle de cada reunión.</p>
+  <p class="section-sub reveal en-text">Clare knows the executive's business, protects their time, and handles every detail of every meeting.</p>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <svg class="feature-icon" viewBox="0 0 40 40" fill="none"><rect x="4" y="6" width="32" height="28" rx="3" stroke="#C8A96E" stroke-width="1.2"/><path d="M4 14h32" stroke="#C8A96E" stroke-width="1.2"/><path d="M12 4v4M28 4v4" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round"/><path d="M10 22h8M10 28h12" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <div class="feature-title es-text">Agenda compartida</div>
+      <div class="feature-title en-text">Shared calendar</div>
+      <div class="feature-desc es-text">El ejecutivo y su asistente trabajan sobre la misma agenda en tiempo real. Cada evento, cada cambio, en el momento.</div>
+      <div class="feature-desc en-text">The executive and their assistant work on the same calendar in real time. Every event, every change, instantly.</div>
+      <span class="feature-tag">CORE</span>
+    </div>
+    <div class="feature-card reveal">
+      <svg class="feature-icon" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="#C8A96E" stroke-width="1.2"/><path d="M20 10v10l6 4" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <div class="feature-title es-text">Briefing diario</div>
+      <div class="feature-title en-text">Daily briefing</div>
+      <div class="feature-desc es-text">Cada mañana el ejecutivo recibe un resumen inteligente: quién es cada persona, qué hay pendiente, qué dicen los indicadores del negocio.</div>
+      <div class="feature-desc en-text">Every morning the executive receives an intelligent summary: who's who, what's pending, what the business indicators say.</div>
+      <span class="feature-tag">PREMIUM</span>
+    </div>
+    <div class="feature-card reveal">
+      <svg class="feature-icon" viewBox="0 0 40 40" fill="none"><rect x="5" y="5" width="14" height="14" rx="2" stroke="#C8A96E" stroke-width="1.2"/><rect x="21" y="5" width="14" height="14" rx="2" stroke="#C8A96E" stroke-width="1.2"/><rect x="5" y="21" width="14" height="14" rx="2" stroke="#C8A96E" stroke-width="1.2"/><rect x="21" y="21" width="14" height="14" rx="2" stroke="#C8A96E" stroke-width="1.2"/></svg>
+      <div class="feature-title es-text">KPIs del negocio</div>
+      <div class="feature-title en-text">Business KPIs</div>
+      <div class="feature-desc es-text">Ocupación, flujo de caja, moras, UF, dólar — todo conectado y visible en el briefing. Configurado por el asistente, consumido por el ejecutivo.</div>
+      <div class="feature-desc en-text">Occupancy, cash flow, overdue payments, exchange rates — all connected and visible in the briefing. Configured by the assistant, consumed by the executive.</div>
+      <span class="feature-tag">PREMIUM</span>
+    </div>
+    <div class="feature-card reveal">
+      <svg class="feature-icon" viewBox="0 0 40 40" fill="none"><rect x="4" y="8" width="32" height="24" rx="3" stroke="#C8A96E" stroke-width="1.2"/><path d="M4 16h32" stroke="#C8A96E" stroke-width="1.2"/><path d="M14 26h12" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <div class="feature-title es-text">Invitación de lujo</div>
+      <div class="feature-title en-text">Luxury invitation</div>
+      <div class="feature-desc es-text">La persona que recibe una invitación de Clare vive una experiencia premium — brandizada, sin logos de terceros, sin publicidad.</div>
+      <div class="feature-desc en-text">The person receiving a Clare invitation experiences a premium, branded experience — no third-party logos, no advertising.</div>
+      <span class="feature-tag">EXCLUSIVO</span>
+    </div>
+    <div class="feature-card reveal">
+      <svg class="feature-icon" viewBox="0 0 40 40" fill="none"><rect x="5" y="2" width="6" height="10" rx="3" stroke="#C8A96E" stroke-width="1.2"/><path d="M2.5 17A5.5 5.5 0 0 0 8 22.5a5.5 5.5 0 0 0 5.5-5.5" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round"/><path d="M8 22.5V26M22 8l8 8-8 8" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <div class="feature-title es-text">Voz a agenda</div>
+      <div class="feature-title en-text">Voice to calendar</div>
+      <div class="feature-desc es-text">El asistente dicta instrucciones y Clare crea, mueve o cancela eventos automáticamente. Sin escribir, sin fricciones.</div>
+      <div class="feature-desc en-text">The assistant dictates instructions and Clare automatically creates, moves or cancels events. No typing, no friction.</div>
+      <span class="feature-tag">CORE</span>
+    </div>
+    <div class="feature-card reveal">
+      <svg class="feature-icon" viewBox="0 0 40 40" fill="none"><path d="M20 4L4 12v8c0 9 7 16 16 18 9-2 16-9 16-18v-8L20 4z" stroke="#C8A96E" stroke-width="1.2"/><path d="M14 20l4 4 8-8" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="feature-title es-text">Privacidad absoluta</div>
+      <div class="feature-title en-text">Absolute privacy</div>
+      <div class="feature-desc es-text">Sin publicidad. Sin venta de datos. Sin acceso no autorizado. La agenda del ejecutivo es suya y solo suya.</div>
+      <div class="feature-desc en-text">No advertising. No data sales. No unauthorized access. The executive's calendar is theirs and theirs alone.</div>
+      <span class="feature-tag">CORE</span>
+    </div>
+  </div>
+</section>
+
+<section class="for-whom" id="for-whom">
+  <div class="section-label reveal es-text">PARA QUIÉN ES CLARE</div>
+  <div class="section-label reveal en-text">WHO CLARE IS FOR</div>
+  <h2 class="section-title reveal es-text">Dos roles. Una experiencia.</h2>
+  <h2 class="section-title reveal en-text">Two roles. One experience.</h2>
+  <div class="gold-divider reveal"></div>
+  <div class="whom-grid">
+    <div class="whom-card reveal">
+      <div class="whom-label es-text">EL EJECUTIVO</div>
+      <div class="whom-label en-text">THE EXECUTIVE</div>
+      <div class="whom-title es-text">Ve. Decide. Confía.</div>
+      <div class="whom-title en-text">See. Decide. Trust.</div>
+      <div class="whom-desc es-text">El ejecutivo no administra — consume. Cada mañana recibe su briefing, ve su agenda, y sabe exactamente qué pasa en su negocio.</div>
+      <div class="whom-desc en-text">The executive doesn't manage — they consume. Every morning they receive their briefing, see their calendar, and know exactly what's happening in their business.</div>
+      <ul class="whom-list">
+        <li class="es-text">Briefing diario inteligente</li>
+        <li class="en-text">Intelligent daily briefing</li>
+        <li class="es-text">Calendario limpio y elegante</li>
+        <li class="en-text">Clean and elegant calendar</li>
+        <li class="es-text">Eventos privados con un toque</li>
+        <li class="en-text">Private events with one tap</li>
+        <li class="es-text">Invitaciones que representan su imagen</li>
+        <li class="en-text">Invitations that represent their image</li>
+      </ul>
+    </div>
+    <div class="whom-card reveal">
+      <div class="whom-label es-text">EL ASISTENTE</div>
+      <div class="whom-label en-text">THE ASSISTANT</div>
+      <div class="whom-title es-text">Controla. Configura. Anticipa.</div>
+      <div class="whom-title en-text">Control. Configure. Anticipate.</div>
+      <div class="whom-desc es-text">El asistente tiene el panel completo — hasta 3 ejecutivos simultáneos, alertas configurables, integraciones con los sistemas del negocio.</div>
+      <div class="whom-desc en-text">The assistant has the complete panel — up to 3 executives simultaneously, configurable alerts, integrations with business systems.</div>
+      <ul class="whom-list">
+        <li class="es-text">Panel multi-ejecutivo</li>
+        <li class="en-text">Multi-executive panel</li>
+        <li class="es-text">Configuración de KPIs y alertas</li>
+        <li class="en-text">KPI and alert configuration</li>
+        <li class="es-text">Voz a agenda</li>
+        <li class="en-text">Voice to calendar</li>
+        <li class="es-text">Integraciones Gmail, Slack, APIs</li>
+        <li class="en-text">Gmail, Slack, API integrations</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section" id="demo">
+  <div class="demo-label reveal es-text">DEMO INTERACTIVA</div>
+  <div class="demo-label reveal en-text">INTERACTIVE DEMO</div>
+  <h2 class="demo-title reveal es-text">Experiméntalo tú mismo</h2>
+  <h2 class="demo-title reveal en-text">Experience it yourself</h2>
+  <p class="demo-sub reveal es-text">Explora la vista del ejecutivo y la del asistente. Crea eventos, activa integraciones, navega el briefing.</p>
+  <p class="demo-sub reveal en-text">Explore the executive view and the assistant view. Create events, activate integrations, navigate the briefing.</p>
+  <div class="demo-frame-wrapper reveal">
+    <div class="demo-bar">
+      <div class="demo-dots">
+        <div class="demo-dot" style="background:#F09595"></div>
+        <div class="demo-dot" style="background:#EF9F27"></div>
+        <div class="demo-dot" style="background:#5DCAA5"></div>
+      </div>
+      <div class="demo-url">clare.lat — demo interactiva</div>
+    </div>
+    <iframe class="demo-iframe" src="clare_demo.html" title="Clare Demo"></iframe>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="section-label reveal es-text">PLANES</div>
+  <div class="section-label reveal en-text">PRICING</div>
+  <h2 class="section-title reveal es-text">Simple y transparente</h2>
+  <h2 class="section-title reveal en-text">Simple and transparent</h2>
+  <p class="section-sub reveal es-text">Sin costos ocultos. Sin publicidad. Sin sorpresas.</p>
+  <p class="section-sub reveal en-text">No hidden costs. No advertising. No surprises.</p>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-label es-text">ESENCIAL</div>
+      <div class="price-label en-text">ESSENTIAL</div>
+      <div class="price-name es-text">Solo</div>
+      <div class="price-name en-text">Solo</div>
+      <div class="price-amount">$199<span>/mes</span></div>
+      <div class="price-period es-text">1 ejecutivo · 1 asistente</div>
+      <div class="price-period en-text">1 executive · 1 assistant</div>
+      <ul class="price-features">
+        <li class="es-text">Calendario compartido</li>
+        <li class="en-text">Shared calendar</li>
+        <li class="es-text">Briefing diario</li>
+        <li class="en-text">Daily briefing</li>
+        <li class="es-text">Voz a agenda</li>
+        <li class="en-text">Voice to calendar</li>
+        <li class="es-text">Invitaciones de lujo</li>
+        <li class="en-text">Luxury invitations</li>
+        <li class="es-text">Privacidad absoluta</li>
+        <li class="en-text">Absolute privacy</li>
+      </ul>
+      <a href="#contact" class="btn-secondary es-text" style="display:block;text-align:center;">SOLICITAR ACCESO</a>
+      <a href="#contact" class="btn-secondary en-text" style="display:block;text-align:center;">REQUEST ACCESS</a>
+    </div>
+    <div class="price-card featured reveal">
+      <div class="price-badge es-text">MÁS POPULAR</div>
+      <div class="price-badge en-text">MOST POPULAR</div>
+      <div class="price-label es-text">PROFESIONAL</div>
+      <div class="price-label en-text">PROFESSIONAL</div>
+      <div class="price-name es-text">Suite</div>
+      <div class="price-name en-text">Suite</div>
+      <div class="price-amount">$349<span>/mes</span></div>
+      <div class="price-period es-text">Hasta 3 ejecutivos · asistente ilimitado</div>
+      <div class="price-period en-text">Up to 3 executives · unlimited assistant</div>
+      <ul class="price-features">
+        <li class="es-text">Todo lo de Solo</li>
+        <li class="en-text">Everything in Solo</li>
+        <li class="es-text">Multi-ejecutivo (hasta 3)</li>
+        <li class="en-text">Multi-executive (up to 3)</li>
+        <li class="es-text">KPIs del negocio</li>
+        <li class="en-text">Business KPIs</li>
+        <li class="es-text">Alertas automáticas</li>
+        <li class="en-text">Automatic alerts</li>
+        <li class="es-text">Integraciones Gmail, Slack</li>
+        <li class="en-text">Gmail, Slack integrations</li>
+        <li class="es-text">Contactos VIP</li>
+        <li class="en-text">VIP contacts</li>
+      </ul>
+      <a href="#contact" class="btn-primary es-text" style="display:block;text-align:center;">SOLICITAR ACCESO</a>
+      <a href="#contact" class="btn-primary en-text" style="display:block;text-align:center;">REQUEST ACCESS</a>
+    </div>
+    <div class="price-card reveal">
+      <div class="price-label es-text">ENTERPRISE</div>
+      <div class="price-label en-text">ENTERPRISE</div>
+      <div class="price-name es-text">Familia</div>
+      <div class="price-name en-text">Family</div>
+      <div class="price-amount" style="font-size:28px;margin-top:20px" class="es-text">A medida</div>
+      <div class="price-amount" style="font-size:28px;margin-top:20px" class="en-text">Custom</div>
+      <div class="price-period es-text">Family office · Grupos empresariales</div>
+      <div class="price-period en-text">Family office · Business groups</div>
+      <ul class="price-features">
+        <li class="es-text">Ejecutivos ilimitados</li>
+        <li class="en-text">Unlimited executives</li>
+        <li class="es-text">White-label completo</li>
+        <li class="en-text">Full white-label</li>
+        <li class="es-text">Integraciones personalizadas</li>
+        <li class="en-text">Custom integrations</li>
+        <li class="es-text">Onboarding dedicado</li>
+        <li class="en-text">Dedicated onboarding</li>
+        <li class="es-text">Soporte humano 24/7</li>
+        <li class="en-text">24/7 human support</li>
+      </ul>
+      <a href="#contact" class="btn-secondary es-text" style="display:block;text-align:center;">CONVERSEMOS</a>
+      <a href="#contact" class="btn-secondary en-text" style="display:block;text-align:center;">LET'S TALK</a>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-label reveal es-text">ACCESO ANTICIPADO</div>
+    <div class="section-label reveal en-text">EARLY ACCESS</div>
+    <h2 class="section-title reveal es-text">Sé de los primeros</h2>
+    <h2 class="section-title reveal en-text">Be among the first</h2>
+    <div class="gold-divider reveal"></div>
+    <p class="reveal es-text" style="color:var(--muted);line-height:1.7;font-size:15px;">Clare está en fase de acceso anticipado. Estamos seleccionando los primeros clientes con cuidado. Si gestionas la agenda de un ejecutivo de alto valor, o eres tú el ejecutivo, nos encantaría conversar.</p>
+    <p class="reveal en-text" style="color:var(--muted);line-height:1.7;font-size:15px;">Clare is in early access. We are carefully selecting our first clients. If you manage a high-value executive's calendar, or you are the executive, we'd love to talk.</p>
+    <form class="contact-form reveal" id="contactForm" onsubmit="handleSubmit(event)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-field">
+          <label class="es-text">NOMBRE</label>
+          <label class="en-text">NAME</label>
+          <input type="text" placeholder="Fernando Cabello" required />
+        </div>
+        <div class="form-field">
+          <label class="es-text">EMAIL</label>
+          <label class="en-text">EMAIL</label>
+          <input type="email" placeholder="fernando@empresa.com" required />
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="es-text">SOY...</label>
+        <label class="en-text">I AM...</label>
+        <select>
+          <option class="es-text" value="">Selecciona tu perfil</option>
+          <option value="exec">Ejecutivo / Director</option>
+          <option value="asst">Asistente ejecutiva</option>
+          <option value="family">Family office</option>
+          <option value="other">Otro</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="es-text">MENSAJE (OPCIONAL)</label>
+        <label class="en-text">MESSAGE (OPTIONAL)</label>
+        <textarea placeholder="Cuéntanos sobre tu situación..."></textarea>
+      </div>
+      <button type="submit" class="form-submit es-text">SOLICITAR ACCESO ANTICIPADO</button>
+      <button type="submit" class="form-submit en-text">REQUEST EARLY ACCESS</button>
+    </form>
+    <div class="form-success" id="formSuccess">
+      <p class="es-text">Gracias. Nos pondremos en contacto pronto.</p>
+      <p class="en-text">Thank you. We'll be in touch soon.</p>
+      <small class="es-text">clare.lat · CFC Soft · Santiago, Chile</small>
+      <small class="en-text">clare.lat · CFC Soft · Santiago, Chile</small>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">CLARE</div>
+  <div class="footer-note">© 2025 CFC Soft · Santiago, Chile · clare.lat</div>
+  <div class="footer-privacy">Sin publicidad · Sin datos compartidos</div>
+</footer>
+
+<script>
+function setLang(lang) {
+  document.body.className = 'lang-' + lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.lang-btn[onclick*="' + lang + '"]').classList.add('active');
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('contactForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+</script>
+</body>
+</html>
